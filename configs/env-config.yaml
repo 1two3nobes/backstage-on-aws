@@ -33,7 +33,7 @@ common:
   # Github Connection for Code* services
   CODESTAR_CONN_ARN: "arn:aws:codestar-connections:eu-north-1:814967776290:connection/75e2bc3f-ed66-41b7-96b3-8778fee09fdf"
   # Chatbot Connection for Code* notifications
-  CODESTAR_NOTIFY_ARN: ""
+  # CODESTAR_NOTIFY_ARN: ""
   # can define the following but defaults to 'main'
   # GITHUB_INFRA_BRANCH
   # GITHUB_APP_BRANCH
