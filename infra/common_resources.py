@@ -29,7 +29,7 @@ class CommonResourceStack(core.Construct):
 
         db_port = int(props.get("POSTGRES_PORT", 5432))
         container_name = props.get("CONTAINER_NAME", 'backstage')
-        ecr_repo_name = props.get("ECR_REPO_NAME", "aws-cdk/assets")
+        ecr_repo_name = props.get("ECR_REPO_NAME")
 
         self.vpc = ec2.Vpc(
             self, 
