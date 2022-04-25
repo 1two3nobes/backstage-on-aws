@@ -147,3 +147,5 @@ site
 
 # Sensitive credentials
 *-credentials.yaml
+
+new_user_credentials.csv
