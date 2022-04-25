@@ -20,11 +20,11 @@ common:
   # Build and Infra Info 
   CONTAINER_PORT: '7000'
   CONTAINER_NAME: 'backstage'
-  DOMAIN_NAME: "propellerhead.wtf"
-  ACM_ARN: "arn:aws:acm:us-east-1:814967776290:certificate/0d05d4c9-63b3-45b7-b168-992b047de960"
-  ECR_REPO_NAME: "backstage"
+  DOMAIN_NAME: "1two3code.com"
+  # ACM_ARN: "arn:aws:acm:us-east-1:814967776290:certificate/0d05d4c9-63b3-45b7-b168-992b047de960"
+  # ECR_REPO_NAME: "backstage"
   # optional will default to 'dockerfile'
-  DOCKERFILE: 'Dockerfile'
+  DOCKERFILE: 'packages/backend/Dockerfile'
 
   # CodePipeline repo info
   GITHUB_APP_REPO: "backstage-app"
