@@ -3,11 +3,10 @@ from aws_cdk import (
     core, 
     aws_ec2 as ec2,
     aws_ecs as ecs,
-    aws_ecr_assets as assets,
     aws_ecr as ecr,
     aws_iam as iam,
     aws_rds as rds,
-    aws_secretsmanager as secrets,
+    aws_s3 as s3,
 )
 
 class CommonResourceStack(core.Construct):
@@ -81,4 +80,6 @@ class CommonResourceStack(core.Construct):
             role_name='Backstage-Fargate-Task-Role',
             assumed_by= iam.ServicePrincipal("ecs-tasks.amazonaws.com")
         )
+
+        s3.Bucket(self, "techdocs")
 
