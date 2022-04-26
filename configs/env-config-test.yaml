@@ -13,7 +13,7 @@ common:
 
 
   # Build and Infra Info 
-  CONTAINER_PORT: '7000'
+  CONTAINER_PORT: '7007'
   CONTAINER_NAME: 'backstage'
   DOMAIN_NAME: ''
   ACM_ARN: ''
