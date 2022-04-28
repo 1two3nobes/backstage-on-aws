@@ -59,7 +59,7 @@ class CommonResourceStack(core.Construct):
             vpc=self.vpc,
             instance_type= ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.SMALL),
             vpc_subnets= ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE),
-            security_groups=[self.aurora_sg],   
+            security_groups=[self.aurora_sg],
         )
 
         # We either create or pull in an ECR repo for the app pipeline and ECS to use. 
