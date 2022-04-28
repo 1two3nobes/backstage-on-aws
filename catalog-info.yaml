@@ -5,6 +5,7 @@ metadata:
   description: 'CDK stack project to create infra to run backstage app'
   annotations:
     github.com/project-slug: rbogle/backstage-on-aws
+    backstage.io/techdocs-ref: dir:.
     
 spec:
   type: service
