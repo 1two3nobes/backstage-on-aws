@@ -1,10 +1,10 @@
 on:
   push:
-    branches: [main,master]
-    # You can even set it to run only when TechDocs related files are updated.
+    branches:
+      - main
     paths:
        - "docs/**"
-       - "mkdocs.yml"
+       - "mkdocs.yaml"
 
 jobs:
   publish-techdocs-site:
@@ -17,9 +17,9 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.TECHDOCS_AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TECHDOCS_AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{ secrets.TECHDOCS_AWS_REGION }} 
-      ENTITY_NAMESPACE: 'default'
-      ENTITY_KIND: 'component'
-      ENTITY_NAME: 'backstage-infra'
+      ENTITY_NAMESPACE: '1two3nobes'
+      ENTITY_KIND: 'Component'
+      ENTITY_NAME: 'backstage-on-aws'
 
     steps:
       - name: Checkout code
