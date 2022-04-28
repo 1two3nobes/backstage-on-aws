@@ -44,6 +44,7 @@ class StageResourceStack(core.Construct):
                 self, "github-auth-secret", github_auth_secret_name)
             self.secret_mapping.update({'AUTH_GITHUB_CLIENT_ID': ecs.Secret.from_secrets_manager(github_auth_secret, field='id')})
             self.secret_mapping.update({"AUTH_GITHUB_CLIENT_SECRET": ecs.Secret.from_secrets_manager(github_auth_secret, field='secret')})
+            self.secret_mapping.update({"GITHUB_TOKEN": ecs.Secret.from_secrets_manager(github_auth_secret, field='pat')})
         if aws_auth_secret_name is not None:
             aws_auth_secret = secrets.Secret.from_secret_name_v2(self, "aws-auth-secret", aws_auth_secret_name)
             self.secret_mapping.update({"AWS_ACCESS_KEY_ID": ecs.Secret.from_secrets_manager(aws_auth_secret, field='id')})
