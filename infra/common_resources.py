@@ -57,7 +57,7 @@ class CommonResourceStack(core.Construct):
 
         self.aurora_instance = rds.InstanceProps(
             vpc=self.vpc,
-            instance_type= ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.MEDIUM),
+            instance_type= ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.SMALL),
             vpc_subnets= ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE),
             security_groups=[self.aurora_sg],   
         )
