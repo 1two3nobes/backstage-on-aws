@@ -22,4 +22,4 @@ new BackstageStack(app, stacks[1] , {
 cdk.Tags.of(app).add("Name", common.TAG_STACK_NAME);
 cdk.Tags.of(app).add("Product", common.TAG_STACK_PRODUCT || 'dev-portal');
 
-// app.synth();
+app.synth();
