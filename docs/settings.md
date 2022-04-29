@@ -43,4 +43,4 @@ The essential variables for CDK deployment to define are:
 ### Secrets to retreive at runtime but keep hidden:
 - AWS_AUTH_SECRET_NAME --> (Required) the name of the AWS Secretmanager Secret which contains key/secret for backstage to acces aws services
 - GITHUB_AUTH_SECRET_NAME --> (Required per stage) the name of the AWS Secretmanager Secret which holds the oauth key/secret for backstage to auth against Github  
-- GITHUB_APP_ARN --> (Required) secret arn for github-app file, used in the app-pipeline during container build. 
+- GITHUB_APP_SECRET_ARN --> (Required) secret arn for github-app file, used in the app-pipeline during container build. 
