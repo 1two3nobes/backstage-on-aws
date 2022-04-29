@@ -1,6 +1,6 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { Secret, SecretStringGenerator } from "aws-cdk-lib/aws-secretsmanager";
-import { ContainerImage, Secret as ECSSecret } from "aws-cdk-lib/aws-ecs";
+import { ContainerImage, ICluster, Secret as ECSSecret } from "aws-cdk-lib/aws-ecs";
 import {
   ApplicationLoadBalancedTaskImageOptions,
   ApplicationLoadBalancedFargateService
@@ -9,19 +9,37 @@ import { HostedZone } from "aws-cdk-lib/aws-route53";
 import { CertificateValidation, Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import { AuroraPostgresEngineVersion, Credentials, DatabaseCluster, DatabaseClusterEngine } from "aws-cdk-lib/aws-rds";
 import { Construct } from "constructs";
+import { InstanceProps, ISecurityGroup } from "aws-cdk-lib/aws-ec2";
+import { IRepository } from "aws-cdk-lib/aws-ecr";
+import { IRole } from "aws-cdk-lib/aws-iam";
 import { common } from "../configs/config";
 import { Stage } from "../configs/types";
-import { CommonResourcesStack } from "./common-resources-stack";
+import { AppPipelineStack } from "./app-pipeline";
 
 type StageSecrets = {
   [key: string]: ECSSecret
 }
+type ResourceDependencies = {
+  auroraInstance: InstanceProps,
+  imageRepo: IRepository,
+  taskRole: IRole,
+  ecsCluster: ICluster,
+  fargateSecurityGroup: ISecurityGroup,
+  pipeline: AppPipelineStack
+}
 export class StageResourcesStack extends Stack {
-
-  public ecsStack: ApplicationLoadBalancedFargateService;
   
-  constructor(scope: Construct, id: string, crs: CommonResourcesStack, stage: Stage, props?: StackProps) {
+  constructor(scope: Construct, id: string, deps: ResourceDependencies, stage: Stage, props?: StackProps) {
     super(scope, id, props);
+
+    const {
+      auroraInstance,
+      imageRepo,
+      taskRole,
+      ecsCluster,
+      fargateSecurityGroup,
+      pipeline
+    } = deps;
 
     const { HOST_NAME, GITHUB_AUTH_SECRET_NAME } = stage;
     const {
@@ -76,27 +94,27 @@ export class StageResourcesStack extends Stack {
     const auroraPostGres = new DatabaseCluster(this, "PGDatabase", {
       engine: DatabaseClusterEngine.auroraPostgres({ version: AuroraPostgresEngineVersion.VER_10_14 }),
       credentials: Credentials.fromSecret(auroraCreds),
-      instanceProps: crs.auroraInstance,
+      instanceProps: auroraInstance,
       instances: 1
     });
 
     const ecsTaskOptions: ApplicationLoadBalancedTaskImageOptions = {
-      image: ContainerImage.fromEcrRepository(crs.imageRepo),
+      image: ContainerImage.fromEcrRepository(imageRepo),
       containerPort: Number(CONTAINER_PORT),
       environment: { ...common, POSTGRES_HOST: auroraPostGres.clusterEndpoint.hostname },
       containerName: CONTAINER_NAME,
       secrets: secretMapping,
-      taskRole: crs.taskRole,
+      taskRole: taskRole,
       enableLogging: true
     };
 
-    this.ecsStack = new ApplicationLoadBalancedFargateService(this, "BackstageService", {
-      cluster: crs.ecsCluster,
+    const ecsStack = new ApplicationLoadBalancedFargateService(this, "BackstageService", {
+      cluster: ecsCluster,
       cpu: 256,
       desiredCount: 1,
       memoryLimitMiB: 1024,
       publicLoadBalancer: true,
-      securityGroups: [crs.fargateSecurityGroup],
+      securityGroups: [fargateSecurityGroup],
       taskImageOptions: ecsTaskOptions,
       certificate: cert,
       redirectHTTP: true,
@@ -104,5 +122,8 @@ export class StageResourcesStack extends Stack {
       domainZone: hostedZone,
       enableECSManagedTags: true
     });
+
+    
+    pipeline.addDeployStage(id, ecsStack.service, stage.STAGE_APPROVAL, stage.APPROVAL_EMAILS)
   }
 }

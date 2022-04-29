@@ -5,18 +5,23 @@ import { Construct } from "constructs";
 import { parse } from "yaml";
 import { Artifact, Pipeline } from "aws-cdk-lib/aws-codepipeline";
 import { CodeBuildAction, CodeStarConnectionsSourceAction, EcsDeployAction, ManualApprovalAction } from "aws-cdk-lib/aws-codepipeline-actions";
-import { CommonResourcesStack } from "./common-resources-stack";
 import { common } from "../configs/config";
 import { BuildSpec, LinuxBuildImage, PipelineProject, BuildEnvironmentVariable } from "aws-cdk-lib/aws-codebuild";
 import { ManagedPolicy, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { IRepository } from "aws-cdk-lib/aws-ecr";
 
+type ResourceDependencies = {
+  imageRepo: IRepository
+}
 export class AppPipelineStack extends Stack {
 
   private pipeline: Pipeline;
   private buildArtifact: Artifact;
 
-  constructor(scope: Construct, id: string, crs: CommonResourcesStack, props?: StackProps) {
+  constructor(scope: Construct, id: string, deps: ResourceDependencies, props?: StackProps) {
     super(scope, id, props);
+
+    const { imageRepo } = deps;
 
     const {
       CODESTAR_CONN_ARN,
@@ -58,7 +63,7 @@ export class AppPipelineStack extends Stack {
     });
     buildProject.addToRolePolicy(secretsPolicy);
 
-    const repoUri = crs?.imageRepo.repositoryUri;
+    const repoUri = imageRepo.repositoryUri;
     const baseRepoUri = `${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com`;
 
     const buildAction = new CodeBuildAction({
