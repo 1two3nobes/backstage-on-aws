@@ -51,7 +51,10 @@ export class AppPipelineStack extends Stack {
 
     const buildProject = new PipelineProject(this, "backstage-app-pipeline",{
       buildSpec: BuildSpec.fromObject(buildSpec),
-      environment: { buildImage: LinuxBuildImage.STANDARD_5_0 }
+      environment: {
+        buildImage: LinuxBuildImage.STANDARD_5_0,
+        privileged: true
+      },
     });
 
     const policy = ManagedPolicy.fromAwsManagedPolicyName("AmazonEC2ContainerRegistryPowerUser");
