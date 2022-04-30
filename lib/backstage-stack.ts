@@ -99,8 +99,8 @@ export class BackstageStack extends Stack {
 
         if (GITHUB_AUTH_SECRET_NAME) {
           const githubAuthSecret = Secret.fromSecretNameV2(this, "github-auth-secret", GITHUB_AUTH_SECRET_NAME);
-          secretMapping.GITHUB_AUTH_CLIENT_ID = ECSSecret.fromSecretsManager(githubAuthSecret, 'id');
-          secretMapping.GITHUB_AUTH_CLIENT_SECRET = ECSSecret.fromSecretsManager(githubAuthSecret, 'secret');
+          secretMapping.AUTH_GITHUB_CLIENT_ID = ECSSecret.fromSecretsManager(githubAuthSecret, 'id');
+          secretMapping.AUTH_GITHUB_CLIENT_SECRET = ECSSecret.fromSecretsManager(githubAuthSecret, 'secret');
           secretMapping.GITHUB_TOKEN = ECSSecret.fromSecretsManager(githubAuthSecret, 'pat');
         }
         
