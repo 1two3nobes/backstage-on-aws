@@ -123,7 +123,7 @@ export class BackstageStack extends Stack {
           secretStringTemplate: JSON.stringify({ username: POSTGRES_USER }),
           generateStringKey: "password",
           excludePunctuation: true,
-          includeSpace: true
+          includeSpace: false
         };
 
         const auroraCreds = new Secret(this, "AuroraCredentialsSecret", {
@@ -137,7 +137,6 @@ export class BackstageStack extends Stack {
           engine: DatabaseClusterEngine.auroraPostgres({ version: AuroraPostgresEngineVersion.VER_10_14 }),
           credentials: Credentials.fromSecret(auroraCreds),
           instanceProps: auroraInstance,
-
         });
 
         const ecsTaskOptions: ApplicationLoadBalancedTaskImageOptions = {
@@ -165,6 +164,10 @@ export class BackstageStack extends Stack {
           enableECSManagedTags: true
         });
 
+        ecsStack.targetGroup.configureHealthCheck({
+          ...ecsStack.targetGroup.healthCheck,
+          port: '7000',
+        });
         
         pipeline.addDeployStage(id, ecsStack.service, stage.STAGE_APPROVAL, stage.APPROVAL_EMAILS)
       });
