@@ -44,11 +44,11 @@ So we need to create secrets in secret manager with the following fields
     - Value: token secret
 
 Further because the test instance and prod instance each have unique domain names we need separate github auth secrets configured for each environment. 
-See [env-config.yaml](../configs/env-config.yaml), for examples of the github auth for each stage.
+See [env.yaml](../configs/env.yaml), for examples of the github auth for each stage.
 
 
 ## Store Github-App secrets file(s) in Secrets Manager. 
-Instead of using personal access tokens for backstage access the github apis, we have configured the use of a github-app for each of the orgs in github that you want to connect to.  Use of these apps requires providing a crendential configuration file to backstage at run time. The file includes a full PEM certificate that makes it difficult to pass via environment variables, so we store the raw file in Secrets Manager, retrieve the contents in the app pipeline and write that to a file which is copied into the image during build. The ARNs for those secrets are loaded from the `env-config.yaml` file. 
+Instead of using personal access tokens for backstage access the github apis, we have configured the use of a github-app for each of the orgs in github that you want to connect to.  Use of these apps requires providing a crendential configuration file to backstage at run time. The file includes a full PEM certificate that makes it difficult to pass via environment variables, so we store the raw file in Secrets Manager, retrieve the contents in the app pipeline and write that to a file which is copied into the image during build. The ARNs for those secrets are loaded from the `env.yaml` file. 
 
 To create a new github-app you can use a utility in the backstage app with
 ```bash
@@ -68,7 +68,7 @@ some permissions will need to be updated in Github on the app for the backstage 
 - email addresses (r)
 
 ## Create ECR repositories
-The application pipeline will build and push to an ECR repository name in the `ECR_REPO_NAME` variable in `env-config.yaml`. The cdk stack will attempt to create this repo with the name set or with the `CONTAINER_NAME`. The app-pipeline will build the first image and push it succesfully, so you do not need to pre-build and pre-seed the repo with an image. 
+The application pipeline will build and push to an ECR repository name in the `ECR_REPO_NAME` variable in `env.yaml`. The cdk stack will attempt to create this repo with the name set or with the `CONTAINER_NAME`. The app-pipeline will build the first image and push it succesfully, so you do not need to pre-build and pre-seed the repo with an image. 
 
 ## Codestar Connections and Notifications
 Both pipelines use a codestar connection to authenticate to github to watch for changes, as well as a codestar notification to push notifcations to slack via the AWS Chatbot integration. 

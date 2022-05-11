@@ -1,10 +1,10 @@
 # Settings and Configurations
 
-## Create a env-config.yaml file
-Create a yaml file `env-config.yaml` in the config directory of this project with your secrets names and parameters to configure both the CDK deployment and to pass them to your backstage app container at runtime. 
-A full clean and separate replicaton of the stacks and pipelines can be deployed with a new configuration file, by changing out the name of the the configuration file in `app.py`. This allows us to do a pre-test of any major changes to infrastructure or deployment flow in another account. see: `env-config-test.yaml`
+## Create a env.yaml file
+Create a yaml file `env.yaml` in the config directory of this project with your secrets names and parameters to configure both the CDK deployment and to pass them to your backstage app container at runtime. 
+A full clean and separate replicaton of the stacks and pipelines can be deployed with a new configuration file, by changing out the name of the the configuration file in `configs/config.ts`. This allows us to do a pre-test of any major changes to infrastructure or deployment flow in another account. see: `env-test.yaml`
 
-Below are the variables used by cdk, you may add any others to `env-config.yaml` that you want to pass to the backstage runtime as env variables.
+Below are the variables used by cdk, you may add any others to `env.yaml` that you want to pass to the backstage runtime as env variables.
 
 The essential variables for CDK deployment to define are:
 
