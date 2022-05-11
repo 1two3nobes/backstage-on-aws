@@ -21,7 +21,7 @@ import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Secret, SecretStringGenerator } from 'aws-cdk-lib/aws-secretsmanager';
 import { HostedZone } from 'aws-cdk-lib/aws-route53';
 import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatemanager';
-import { AuroraPostgresEngineVersion, Credentials, DatabaseCluster, DatabaseClusterEngine, ParameterGroup, ServerlessCluster } from 'aws-cdk-lib/aws-rds';
+import { AuroraCapacityUnit, AuroraPostgresEngineVersion, Credentials, DatabaseCluster, DatabaseClusterEngine, ParameterGroup, ServerlessCluster } from 'aws-cdk-lib/aws-rds';
 import { ApplicationLoadBalancedFargateService, ApplicationLoadBalancedTaskImageOptions } from 'aws-cdk-lib/aws-ecs-patterns';
 
 
@@ -129,6 +129,10 @@ export class BackstageStack extends Stack {
           credentials: Credentials.fromSecret(auroraCreds),
           securityGroups: [auroraSecurityGroup],
           vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_NAT },
+          scaling: {
+            minCapacity: AuroraCapacityUnit.ACU_2,
+            maxCapacity: AuroraCapacityUnit.ACU_4,
+          }
         });
 
         const ecsTaskOptions: ApplicationLoadBalancedTaskImageOptions = {

@@ -7,5 +7,14 @@
   "hosted-zone:account=814967776290:domainName=1two3code.com:region=eu-north-1": {
     "Id": "/hostedzone/Z0124080X92VUNBA2HQO",
     "Name": "1two3code.com."
+  },
+  "availability-zones:account=814967776290:region=eu-west-1": [
+    "eu-west-1a",
+    "eu-west-1b",
+    "eu-west-1c"
+  ],
+  "hosted-zone:account=814967776290:domainName=1two3code.com:region=eu-west-1": {
+    "Id": "/hostedzone/Z0124080X92VUNBA2HQO",
+    "Name": "1two3code.com."
   }
 }
