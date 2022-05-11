@@ -1,14 +1,12 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { 
   InstanceClass,
-  InstanceProps,
   InstanceSize,
   InstanceType,
   Port,
   SecurityGroup,
   Vpc,
   SubnetType,
-  MachineImage,
 } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 import { common, stages } from '../configs/config';
@@ -55,15 +53,6 @@ export class BackstageStack extends Stack {
     });
 
     auroraSecurityGroup.addIngressRule(fargateSecurityGroup, Port.tcp(Number(POSTGRES_PORT)));
-
-    const auroraInstance: InstanceProps = {
-      vpc,
-      instanceType: InstanceType.of(InstanceClass.BURSTABLE3, InstanceSize.MEDIUM),
-      machineImage: MachineImage.latestAmazonLinux(),
-      vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_NAT },
-
-      securityGroup: auroraSecurityGroup
-    }
 
     const imageRepo = ECR_REPO_NAME
       ? Repository.fromRepositoryName(this, "repo", ECR_REPO_NAME)
@@ -136,7 +125,12 @@ export class BackstageStack extends Stack {
         const auroraPostGres = new DatabaseCluster(this, "PGDatabase", {
           engine: DatabaseClusterEngine.auroraPostgres({ version: AuroraPostgresEngineVersion.VER_10_14 }),
           credentials: Credentials.fromSecret(auroraCreds),
-          instanceProps: auroraInstance,
+          instanceProps: {
+            vpc,
+            instanceType: InstanceType.of(InstanceClass.BURSTABLE3, InstanceSize.MEDIUM),
+            securityGroups: [auroraSecurityGroup],
+            vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_NAT },
+          },
         });
 
         const ecsTaskOptions: ApplicationLoadBalancedTaskImageOptions = {
