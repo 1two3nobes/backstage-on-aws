@@ -2,7 +2,7 @@
   "name": "ts",
   "version": "0.1.0",
   "bin": {
-    "ts": "bin/ts.js"
+    "ts": "bin/backstage-on-aws.js"
   },
   "scripts": {
     "build": "tsc",
