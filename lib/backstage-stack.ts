@@ -1,4 +1,4 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { 
   InstanceClass,
   InstanceSize,
@@ -21,7 +21,7 @@ import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Secret, SecretStringGenerator } from 'aws-cdk-lib/aws-secretsmanager';
 import { HostedZone } from 'aws-cdk-lib/aws-route53';
 import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatemanager';
-import { AuroraPostgresEngineVersion, Credentials, DatabaseCluster, DatabaseClusterEngine } from 'aws-cdk-lib/aws-rds';
+import { AuroraPostgresEngineVersion, Credentials, DatabaseCluster, DatabaseClusterEngine, ParameterGroup, ServerlessCluster } from 'aws-cdk-lib/aws-rds';
 import { ApplicationLoadBalancedFargateService, ApplicationLoadBalancedTaskImageOptions } from 'aws-cdk-lib/aws-ecs-patterns';
 
 
@@ -122,15 +122,13 @@ export class BackstageStack extends Stack {
 
         secretMapping.POSTGRES_PASSWORD = ECSSecret.fromSecretsManager(auroraCreds, 'password');
 
-        const auroraPostGres = new DatabaseCluster(this, "PGDatabase", {
-          engine: DatabaseClusterEngine.auroraPostgres({ version: AuroraPostgresEngineVersion.VER_10_14 }),
+        const auroraPostGres = new ServerlessCluster(this, 'PGDatabaseServerless', {
+          engine: DatabaseClusterEngine.AURORA_POSTGRESQL,
+          parameterGroup: ParameterGroup.fromParameterGroupName(this, 'ParameterGroup', 'default.aurora-postgresql10'),
+          vpc,
           credentials: Credentials.fromSecret(auroraCreds),
-          instanceProps: {
-            vpc,
-            instanceType: InstanceType.of(InstanceClass.BURSTABLE3, InstanceSize.MEDIUM),
-            securityGroups: [auroraSecurityGroup],
-            vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_NAT },
-          },
+          securityGroups: [auroraSecurityGroup],
+          vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_NAT },
         });
 
         const ecsTaskOptions: ApplicationLoadBalancedTaskImageOptions = {
