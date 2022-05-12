@@ -96,7 +96,7 @@ export class BackstageStack extends Stack {
         if (AWS_AUTH_SECRET_NAME) {
           const awsAuthSecret = Secret.fromSecretNameV2(this, "aws-auth-secret", AWS_AUTH_SECRET_NAME);
           secretMapping.AWS_ACCESS_KEY_ID = ECSSecret.fromSecretsManager(awsAuthSecret, 'id');
-          secretMapping.AWS_ACCESS_KEY_SECRET = ECSSecret.fromSecretsManager(awsAuthSecret, 'secret');
+          secretMapping.AWS_SECRET_ACCESS_KEY = ECSSecret.fromSecretsManager(awsAuthSecret, 'secret');
         }
 
         const hostedZone = HostedZone.fromLookup(this, "hostedzone", { domainName: DOMAIN_NAME });
