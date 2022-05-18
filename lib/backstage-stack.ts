@@ -130,8 +130,8 @@ export class BackstageStack extends Stack {
           securityGroups: [auroraSecurityGroup],
           vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_NAT },
           scaling: {
-            minCapacity: AuroraCapacityUnit.ACU_2,
-            maxCapacity: AuroraCapacityUnit.ACU_4,
+            minCapacity: AuroraCapacityUnit.ACU_1,
+            maxCapacity: AuroraCapacityUnit.ACU_2,
           }
         });
 
@@ -148,8 +148,8 @@ export class BackstageStack extends Stack {
         const ecsStack = new ApplicationLoadBalancedFargateService(this, "BackstageService", {
           cluster: ecsCluster,
           cpu: 256,
-          desiredCount: 2,
-          memoryLimitMiB: 1024,
+          desiredCount: 1,
+          memoryLimitMiB: 512,
           publicLoadBalancer: true,
           securityGroups: [fargateSecurityGroup],
           taskImageOptions: ecsTaskOptions,
