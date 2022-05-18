@@ -130,7 +130,7 @@ export class BackstageStack extends Stack {
           securityGroups: [auroraSecurityGroup],
           vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_NAT },
           scaling: {
-            minCapacity: AuroraCapacityUnit.ACU_1,
+            minCapacity: AuroraCapacityUnit.ACU_2,
             maxCapacity: AuroraCapacityUnit.ACU_2,
           }
         });
